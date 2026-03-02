@@ -41,59 +41,6 @@ const faqs: TabList[] = [
       </div>
     )
   },
-  {
-    id: 'aturan',
-    title: 'Aturan Khusus',
-    content: (
-      <div className="space-y-4">
-        <h3 className="text-2xl font-bold text-foreground">Aturan Override Override</h3>
-        <div className="p-4 bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl relative overflow-hidden">
-           <div className="absolute top-0 left-0 w-1 h-full bg-primary"></div>
-           <p className="text-foreground/80 leading-relaxed font-medium">
-             Jika sistem memutar roda dan nama yang terpilih adalah <span className="text-primary font-bold tracking-wide">"Lintang Enggal"</span> (case-insensitive), maka terdapat aturan khusus yang berlaku.
-           </p>
-           <p className="text-foreground/80 leading-relaxed mt-2">
-             Mata kuliah yang didapatkan akan secara otomatis dikunci ke <strong className="font-semibold text-foreground">Disain & Manajemen Jaringan Komputer</strong> (atau variannya yang mengandung kata disain/jaringan komputer). Hal ini absolut dan tidak dipengaruhi oleh putaran acak normal.
-           </p>
-        </div>
-        <p className="text-foreground/70 text-sm mt-2">
-          Untuk mahasiswa selain nama di atas, mata kuliah akan ditentukan murni secara acak.
-        </p>
-      </div>
-    )
-  },
-  {
-    id: 'teknologi',
-    title: 'Teknologi yang Digunakan',
-    content: (
-      <div className="space-y-6">
-        <h3 className="text-2xl font-bold text-foreground">Stack Teknologi</h3>
-        <p className="text-foreground/70">Aplikasi ini dibangun menggunakan arsitektur modern untuk performansi maksimal:</p>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 rounded-xl bg-background border border-foreground/5 shadow-sm">
-             <h4 className="font-bold text-foreground mb-1">Next.js</h4>
-             <p className="text-xs text-foreground/60">App Router, SSR, & Optimization</p>
-          </div>
-          <div className="p-4 rounded-xl bg-background border border-foreground/5 shadow-sm">
-             <h4 className="font-bold text-foreground mb-1">GSAP</h4>
-             <p className="text-xs text-foreground/60">Complex entrance & wheel physics</p>
-          </div>
-          <div className="p-4 rounded-xl bg-background border border-foreground/5 shadow-sm">
-             <h4 className="font-bold text-foreground mb-1">Tailwind CSS</h4>
-             <p className="text-xs text-foreground/60">Responsive UI & glassmorphism</p>
-          </div>
-          <div className="p-4 rounded-xl bg-background border border-foreground/5 shadow-sm">
-             <h4 className="font-bold text-foreground mb-1">Lenis</h4>
-             <p className="text-xs text-foreground/60">Fluid smooth page scrolling</p>
-          </div>
-          <div className="p-4 rounded-xl bg-background border border-foreground/5 shadow-sm col-span-2">
-             <h4 className="font-bold text-foreground mb-1">Web Speech API</h4>
-             <p className="text-xs text-foreground/60">Sintesis text-to-speech bahasa Indonesia</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
 ];
 
 export default function FAQ() {

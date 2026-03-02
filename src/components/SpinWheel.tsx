@@ -126,7 +126,7 @@ export default function SpinWheel({
       
       <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] lg:w-[400px] lg:h-[400px]">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 z-20 drop-shadow-[0_4px_10px_rgba(255,255,255,0.5)]">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" className="transform rotate-180">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 24L0 0L24 0L12 24Z" />
           </svg>
         </div>
