@@ -8,6 +8,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import Hero from "@/components/Hero";
 import Countdown from "@/components/Countdown";
 import FAQ from "@/components/FAQ";
+import GsapScrollReveal from "@/components/GsapScrollReveal";
 import { useState } from "react";
 
 export default function Home() {
@@ -53,11 +54,16 @@ export default function Home() {
   return (
     <SmoothScroll>
       <main className="min-h-screen relative overflow-hidden bg-background w-full">
-        <Hero />
+        <GsapScrollReveal>
+          <Hero />
+        </GsapScrollReveal>
         
-        <Countdown />
+        <GsapScrollReveal delay={0.1}>
+          <Countdown />
+        </GsapScrollReveal>
 
-        <section id="spin-wheel" className="container mx-auto px-6 lg:px-12 py-24 flex flex-col items-center z-10 relative">
+        <GsapScrollReveal delay={0.1}>
+          <section id="spin-wheel" className="container mx-auto px-6 md:px-12 lg:px-20 xl:px-24 py-24 flex flex-col items-center z-10 relative">
           <header className="text-center mb-16 max-w-3xl">
             <h2 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight mb-4">
               Spin & <span className="text-gradient">Generate</span>
@@ -103,8 +109,11 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </GsapScrollReveal>
 
-        <FAQ />
+        <GsapScrollReveal delay={0.1}>
+          <FAQ />
+        </GsapScrollReveal>
 
         <ResultModal 
           isOpen={showModal}
