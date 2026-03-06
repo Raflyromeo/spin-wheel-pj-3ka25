@@ -114,10 +114,10 @@ export default function SpinWheel({
   return (
     <div className="flex flex-col items-center gap-6 relative p-4">
       <div className="flex items-center justify-between w-full max-w-[300px]">
-        <h3 className="text-xl font-bold text-white uppercase tracking-wider drop-shadow-md">{title}</h3>
+        <h3 className="text-xl font-bold text-foreground uppercase tracking-wider drop-shadow-md">{title}</h3>
         <button 
           onClick={toggleSound}
-          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white"
+          className="p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 transition-colors text-foreground"
           title="Toggle Sound"
         >
           {isSoundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
@@ -125,16 +125,15 @@ export default function SpinWheel({
       </div>
       
       <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] lg:w-[400px] lg:h-[400px]">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 z-20 drop-shadow-[0_4px_10px_rgba(255,255,255,0.5)]">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 z-20 drop-shadow-[0_4px_10px_rgba(0,0,0,0.2)] dark:drop-shadow-[0_4px_10px_rgba(255,255,255,0.5)]">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" className="text-foreground" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 24L0 0L24 0L12 24Z" />
           </svg>
         </div>
 
         <div 
-          className="w-full h-full rounded-full overflow-hidden border-4 border-white/20 relative shadow-[0_0_50px_rgba(139,92,246,0.25)]"
+          className="w-full h-full rounded-full overflow-hidden border-4 border-foreground/20 relative shadow-[0_0_50px_rgba(139,92,246,0.15)] dark:shadow-[0_0_50px_rgba(139,92,246,0.25)]"
         >
-          {/* Wheel Background */}
           <div 
             ref={wheelRef}
             className="w-full h-full rounded-full absolute top-0 left-0"
@@ -169,8 +168,8 @@ export default function SpinWheel({
             })}
           </div>
 
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full glass-panel z-10 flex items-center justify-center border-4 border-white/50 shadow-2xl">
-            <div className="w-4 h-4 rounded-full bg-white shadow-inner"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full glass-panel z-10 flex items-center justify-center border-4 border-background shadow-2xl">
+            <div className="w-4 h-4 rounded-full bg-foreground/20 dark:bg-white shadow-inner"></div>
           </div>
         </div>
       </div>
