@@ -68,7 +68,7 @@ export default function Countdown() {
 
   return (
     <section id="countdown" className="py-24 relative overflow-hidden flex justify-center items-center">
-      <div className="container mx-auto px-4 z-10 flex flex-col items-center">
+      <div className="container mx-auto px-6 md:px-12 lg:px-20 xl:px-24 z-10 flex flex-col items-center">
         
         <div className="mb-10 text-center">
           <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">
