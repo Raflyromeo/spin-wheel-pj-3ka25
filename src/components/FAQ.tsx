@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import TutorialAnimation from './TutorialAnimation';
 
 interface TabList {
   id: string;
@@ -29,15 +30,14 @@ const faqs: TabList[] = [
     id: 'cara',
     title: 'Cara Menggunakan',
     content: (
-      <div className="space-y-4">
-        <h3 className="text-2xl font-bold text-foreground">Panduan Penggunaan</h3>
-        <ul className="list-decimal list-inside space-y-3 text-foreground/70 marker:text-primary marker:font-bold">
-          <li>Pindahkan kursor ke bagian formulir input data.</li>
-          <li>Masukkan daftar nama mahasiswa ke dalam kolom pertama (satu nama per baris).</li>
-          <li>Masukkan daftar mata kuliah ke kolom sebelah atau bawahnya (satu mata kuliah per baris).</li>
-          <li>Klik tombol <strong className="text-primary font-semibold">Spin Wheel</strong>.</li>
-          <li>Hasil akan diacak dan muncul dalam bentuk pengumuman layar penuh otomatis ketika putaran selesai.</li>
-        </ul>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-2xl font-bold text-foreground mb-4">Panduan Penggunaan</h3>
+          <p className="text-foreground/70 leading-relaxed">
+            Perhatikan simulasi interaktif di bawah ini untuk melihat bagaimana cara menggunakan sistem mulai dari input data hingga hasil pemilihan keluar.
+          </p>
+        </div>
+        <TutorialAnimation />
       </div>
     )
   },
@@ -58,7 +58,7 @@ export default function FAQ() {
 
   return (
     <section id="faq" className="py-24 relative overflow-hidden bg-foreground/5 dark:bg-background/40">
-      <div className="container mx-auto px-6 lg:px-12 z-10 relative">
+      <div className="container mx-auto px-6 md:px-12 lg:px-20 xl:px-24 z-10 relative">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">
             Informasi Sistem
