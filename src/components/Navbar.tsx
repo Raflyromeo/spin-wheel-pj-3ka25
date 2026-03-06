@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useState, useEffect } from "react"
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion"
+import { motion, AnimatePresence, useScroll, useMotionValueEvent, Variants } from "framer-motion"
 import { Menu, X, Home, Clock, CircleDot, HelpCircle, Moon, Sun } from "lucide-react"
 import { useTheme } from './ThemeProvider';
 import Image from 'next/image';
@@ -67,7 +67,7 @@ export default function Navbar() {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
-  const menuVariants = {
+  const menuVariants: Variants = {
     closed: {
       opacity: 0,
       scale: 0.8,
@@ -95,7 +95,7 @@ export default function Navbar() {
     }
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     closed: {
       y: 20,
       opacity: 0,
@@ -113,7 +113,7 @@ export default function Navbar() {
     }
   }
 
-  const hamburgerVariants = {
+  const hamburgerVariants: Variants = {
     normal: { rotate: 0, scale: 1 },
     scrolled: { rotate: 360, scale: 1.1 }
   }
