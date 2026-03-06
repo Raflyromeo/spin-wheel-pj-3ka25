@@ -95,27 +95,27 @@ export default function ResultModal({ isOpen, name, course, onClose, isSoundEnab
 
         <div className="z-10 flex flex-col gap-6 w-full">
           <div className="space-y-2">
-            <p className="text-gray-400 text-lg uppercase tracking-widest font-semibold">Selamat kepada</p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white text-gradient pb-2">{name}</h2>
+            <p className="text-foreground/60 text-lg uppercase tracking-widest font-semibold">Selamat kepada</p>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-foreground text-gradient pb-2">{name}</h2>
           </div>
 
           <div className="opacity-80">
-            <p className="text-white/80">atas penunjukannya sebagai</p>
-            <p className="text-white font-semibold text-xl mt-1">Penanggung Jawab (PJ)</p>
+            <p className="text-foreground/80">atas penunjukannya sebagai</p>
+            <p className="text-foreground font-semibold text-xl mt-1">Penanggung Jawab (PJ)</p>
           </div>
 
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mt-2 relative overflow-hidden">
+          <div className="bg-foreground/5 border border-foreground/10 rounded-2xl p-6 mt-2 relative overflow-hidden">
              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 z-0"></div>
              <div className="relative z-10">
-                <p className="text-gray-400 text-sm mb-2">Mata Kuliah</p>
-                <h3 className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">{course}</h3>
+                <p className="text-foreground/60 text-sm mb-2">Mata Kuliah</p>
+                <h3 className="text-2xl md:text-3xl font-bold text-foreground drop-shadow-sm">{course}</h3>
              </div>
           </div>
 
           <div className="mt-8 flex justify-center">
             <MagneticButton 
               onClick={handleClose}
-              className="px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+              className="px-10 py-4 bg-foreground text-background font-bold rounded-full hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(59,130,246,0.3)]"
             >
               Tutup & Lanjutkan
             </MagneticButton>
