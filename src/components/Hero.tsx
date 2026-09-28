@@ -24,7 +24,7 @@ const MARQUEE_ITEMS = [
 
 // ─── Countdown logic ─────────────────────────────────────────────────────────
 function useCountdown() {
-  const target = new Date('2026-03-02T13:00:00+07:00').getTime();
+  const target = new Date('2026-09-28T15:00:00+07:00').getTime();
   const [time, setTime] = useState({ h: 0, m: 0, s: 0 });
   const [started, setStarted] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -167,11 +167,11 @@ function Section2({ scrollYProgress, onScrollToPemilihan }: {
           <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-x-6 gap-y-2">
             <span className="inline-flex items-center gap-2 text-sm font-bold text-foreground/60">
               <CalendarDays size={16} className="text-primary" />
-              Senin, 2 Maret 2026
+              Senin, 28 September 2026
             </span>
             <span className="inline-flex items-center gap-2 text-sm font-bold text-foreground/60">
               <Timer size={16} className="text-primary" />
-              Pukul 13.00 WIB
+              Pukul 15.00 WIB
             </span>
             <span className="inline-flex items-center gap-2 text-sm font-bold text-foreground/60">
               <MapPin size={16} className="text-primary" />
