@@ -1,106 +1,115 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import TutorialAnimation from './TutorialAnimation';
+import React, { useState, useRef } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
-interface TabList {
-  id: string;
-  title: string;
-  content: React.ReactNode;
-}
-
-const faqs: TabList[] = [
+const faqs = [
   {
     id: 'tentang',
-    title: 'Tentang Sistem',
-    content: (
-      <div className="space-y-4">
-        <h3 className="text-2xl font-bold text-foreground">Tentang Sistem</h3>
-        <p className="text-foreground/70 leading-relaxed">
-          Sistem ini dirancang untuk memilih Penanggung Jawab (PJ) Mata Kuliah secara adil dan transparan untuk mahasiswa Kelas 3KA25.
-        </p>
-        <p className="text-foreground/70 leading-relaxed">
-          Pemilihan menggunakan mekanisme <strong className="text-foreground font-semibold">spin wheel acak</strong> dengan antarmuka yang modern, memberikan pengalaman interaktif sebelum hasil final ditetapkan.
-        </p>
-      </div>
-    )
+    q: 'Apa itu sistem ini?',
+    a: 'Sistem ini dirancang untuk memilih Penanggung Jawab (PJ) Mata Kuliah secara acak dan transparan untuk mahasiswa Kelas 4KA25. Pemilihan dilakukan menggunakan pemindaian daftar mahasiswa dengan hasil yang benar-benar acak.'
   },
   {
     id: 'cara',
-    title: 'Cara Menggunakan',
-    content: (
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-2xl font-bold text-foreground mb-4">Panduan Penggunaan</h3>
-          <p className="text-foreground/70 leading-relaxed">
-            Perhatikan simulasi interaktif di bawah ini untuk melihat bagaimana cara menggunakan sistem mulai dari input data hingga hasil pemilihan keluar.
-          </p>
-        </div>
-        <TutorialAnimation />
-      </div>
-    )
+    q: 'Bagaimana cara menggunakannya?',
+    a: '1. Masukkan nama mata kuliah yang ingin dipilih PJ-nya.\n2. Klik tombol "Pilih!" dan tunggu proses pemindaian.\n3. Sistem akan memindai daftar dari atas ke bawah, lalu berhenti secara acak.\n4. Nama yang terpilih akan ditandai dengan ikon PJ dan nama mata kuliah.\n5. Pemilihan bisa diulang untuk mata kuliah berbeda.'
+  },
+  {
+    id: 'looping',
+    q: 'Apakah nama bisa keluar berkali-kali?',
+    a: 'Ya! Sistem ini menggunakan mekanisme looping — semua 35 mahasiswa selalu ada dalam daftar dan bisa terpilih berulang kali. Ini memastikan setiap pemilihan benar-benar acak tanpa bias urutan.'
+  },
+  {
+    id: 'adil',
+    q: 'Apakah pemilihan ini adil?',
+    a: 'Setiap pemilihan menggunakan fungsi random bawaan JavaScript yang tidak dapat diprediksi. Semua mahasiswa memiliki peluang yang sama untuk terpilih setiap kali proses dijalankan.'
   },
 ];
 
-export default function FAQ() {
-  const [activeTab, setActiveTab] = useState<string>(faqs[0].id);
-  const contentRef = useRef<HTMLDivElement>(null);
+function ScrollRevealItem({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.95', 'start 0.6'] });
+  const y       = useTransform(scrollYProgress, [0, 1], [40, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  return (
+    <motion.div ref={ref} style={{ y, opacity }} transition={{ delay }}>
+      {children}
+    </motion.div>
+  );
+}
 
-  useEffect(() => {
-    if (contentRef.current) {
-      gsap.fromTo(contentRef.current, 
-        { autoAlpha: 0, x: 20 }, 
-        { autoAlpha: 1, x: 0, duration: 0.4, ease: 'power2.out' }
-      );
-    }
-  }, [activeTab]);
+export default function FAQ() {
+  const [openId, setOpenId] = useState<string | null>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: headerProgress } = useScroll({ target: headerRef, offset: ['start 0.9', 'start 0.5'] });
+  const headerY       = useTransform(headerProgress, [0, 1], [50, 0]);
+  const headerOpacity = useTransform(headerProgress, [0, 1], [0, 1]);
 
   return (
-    <section id="faq" className="py-24 relative overflow-hidden bg-foreground/5 dark:bg-background/40">
-      <div className="container mx-auto px-6 md:px-12 lg:px-20 xl:px-24 z-10 relative">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">
+    <section id="faq" className="neo-section py-20 bg-surface">
+      <div className="container mx-auto px-4 md:px-8 lg:px-16">
+        
+        {/* Header with scroll reveal */}
+        <motion.div ref={headerRef} style={{ y: headerY, opacity: headerOpacity }} className="mb-12 flex flex-col items-center text-center">
+          <div className="inline-block bg-foreground text-background text-xs font-black px-3 py-1.5 uppercase tracking-widest mb-4">
+            Info
+          </div>
+          <h2 className="text-3xl md:text-5xl font-black text-foreground uppercase tracking-tight mb-3">
             Informasi Sistem
           </h2>
-          <p className="text-foreground/50 max-w-2xl mx-auto">
-            Pelajari lebih lanjut tentang bagaimana sistem pemilihan Penanggung Jawab Kelas 3KA25 ini bekerja.
+          <p className="text-foreground/60 font-medium max-w-lg mx-auto">
+            Pelajari cara kerja sistem pemilihan Penanggung Jawab Mata Kuliah Kelas 4KA25.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col md:flex-row gap-8 lg:gap-16 max-w-5xl mx-auto">
-          
-          <div className="w-full md:w-1/3 flex border-b md:border-b-0 md:border-l border-foreground/10 overflow-x-auto md:overflow-visible hide-scrollbar">
-            <div className="flex flex-row md:flex-col w-full">
-              {faqs.map((faq) => {
-                const isActive = activeTab === faq.id;
-                return (
+        {/* Accordion with staggered reveal */}
+        <div className="max-w-4xl mx-auto flex flex-col gap-4">
+          {faqs.map((faq, i) => {
+            const isOpen = openId === faq.id;
+            return (
+              <ScrollRevealItem key={faq.id} delay={i * 0.1}>
+                <div className={`neo-card transition-colors duration-200 overflow-hidden ${isOpen ? 'border-foreground' : 'bg-card'}`}>
                   <button
-                    key={faq.id}
-                    onClick={() => setActiveTab(faq.id)}
-                    className={`relative text-left px-6 py-4 transition-all duration-300 whitespace-nowrap md:whitespace-normal
-                      ${isActive 
-                        ? 'text-primary font-bold bg-primary/5' 
-                        : 'text-foreground/60 font-medium hover:text-foreground hover:bg-foreground/5'
-                      }
-                    `}
+                    onClick={() => setOpenId(isOpen ? null : faq.id)}
+                    className={`w-full flex items-center justify-between px-6 md:px-8 py-5 md:py-6 text-left group transition-colors duration-200 ${isOpen ? 'bg-primary' : 'hover:bg-surface'}`}
                   >
-                    {isActive && (
-                       <span className="absolute bottom-0 left-0 w-full h-0.5 md:w-0.5 md:h-full bg-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]"></span>
-                    )}
-                    {faq.title}
+                    <div className="flex items-center gap-4 md:gap-6">
+                      <span className={`text-2xl md:text-3xl font-black font-mono transition-colors ${isOpen ? 'text-background/50' : 'text-foreground/20 group-hover:text-primary/40'}`}>
+                        0{i + 1}
+                      </span>
+                      <span className={`font-black text-base md:text-lg uppercase tracking-wide pr-4 transition-colors ${isOpen ? 'text-background' : 'text-foreground group-hover:text-primary'}`}>
+                        {faq.q}
+                      </span>
+                    </div>
+                    <div className={`w-10 h-10 border-3 flex items-center justify-center flex-shrink-0 transition-colors duration-200 ${isOpen ? 'border-background text-background bg-background/10' : 'border-foreground text-foreground bg-surface group-hover:bg-primary group-hover:text-background group-hover:border-primary'}`}>
+                      <ChevronDown size={20} strokeWidth={3} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                    </div>
                   </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="w-full md:w-2/3 min-h-[300px]" ref={contentRef}>
-            <div className="glass-panel p-8 sm:p-10 rounded-3xl h-full shadow-lg">
-              {faqs.find(f => f.id === activeTab)?.content}
-            </div>
-          </div>
-
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2, ease: 'easeOut' }}
+                      className="border-t-3 border-foreground px-6 md:px-8 py-6 md:py-8 bg-background relative"
+                    >
+                      {/* Decorative dots in the background of active content */}
+                      <div className="absolute inset-0 bg-[radial-gradient(var(--color-foreground)_1px,transparent_1px)] bg-[size:12px_12px] opacity-10 pointer-events-none"></div>
+                      
+                      <div className="relative z-10 flex gap-4 md:gap-6">
+                        {/* Spacer to align with text from header */}
+                        <div className="hidden md:block w-[36px] flex-shrink-0"></div>
+                        <p className="text-foreground/80 font-medium leading-relaxed text-sm md:text-base whitespace-pre-line border-l-4 border-primary pl-4 md:pl-6 py-1">
+                          {faq.a}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+              </ScrollRevealItem>
+            );
+          })}
         </div>
       </div>
     </section>
