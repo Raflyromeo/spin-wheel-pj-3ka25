@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import MagneticButton from './MagneticButton';
 import { announceResult } from '@/lib/tts';
+import { X, Trophy } from 'lucide-react';
 
 interface ResultModalProps {
   isOpen: boolean;
@@ -24,102 +24,116 @@ export default function ResultModal({ isOpen, name, course, onClose, isSoundEnab
           const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
           const osc1 = ctx.createOscillator();
           const osc2 = ctx.createOscillator();
-          const gainNode = ctx.createGain();
-          
+          const gain = ctx.createGain();
           osc1.type = 'sine';
           osc2.type = 'triangle';
-          
           osc1.frequency.setValueAtTime(440, ctx.currentTime);
           osc1.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3);
-          
           osc2.frequency.setValueAtTime(554.37, ctx.currentTime);
           osc2.frequency.exponentialRampToValueAtTime(1108.73, ctx.currentTime + 0.4);
-          
-          gainNode.gain.setValueAtTime(0, ctx.currentTime);
-          gainNode.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.1);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
-          
-          osc1.connect(gainNode);
-          osc2.connect(gainNode);
-          gainNode.connect(ctx.destination);
-          
-          osc1.start();
-          osc2.start();
-          osc1.stop(ctx.currentTime + 1.5);
-          osc2.stop(ctx.currentTime + 1.5);
-        } catch(e) {}
-
+          gain.gain.setValueAtTime(0, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+          osc1.connect(gain); osc2.connect(gain); gain.connect(ctx.destination);
+          osc1.start(); osc2.start();
+          osc1.stop(ctx.currentTime + 1.5); osc2.stop(ctx.currentTime + 1.5);
+        } catch {}
         setTimeout(() => announceResult(name, course, isSoundEnabled), 500);
       }
 
-      gsap.fromTo(containerRef.current, 
-        { autoAlpha: 0, backdropFilter: 'blur(0px)' }, 
-        { autoAlpha: 1, backdropFilter: 'blur(8px)', duration: 0.5, ease: 'power2.out' }
+      gsap.fromTo(containerRef.current,
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.25, ease: 'power2.out' }
       );
-
       gsap.fromTo(cardRef.current,
-        { scale: 0.8, y: 50, opacity: 0 },
-        { scale: 1, y: 0, opacity: 1, duration: 0.7, ease: 'elastic.out(1, 0.7)', delay: 0.1 }
+        { scale: 0.85, y: 40, opacity: 0 },
+        { scale: 1, y: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.5)', delay: 0.05 }
       );
     }
   }, [isOpen, name, course, isSoundEnabled]);
 
   const handleClose = () => {
     if (containerRef.current && cardRef.current) {
-      gsap.to(cardRef.current, { scale: 0.9, opacity: 0, y: 30, duration: 0.3, ease: 'power2.in' });
-      gsap.to(containerRef.current, { 
-        autoAlpha: 0, 
-        backdropFilter: 'blur(0px)', 
-        duration: 0.4, 
+      gsap.to(cardRef.current, { scale: 0.9, opacity: 0, y: 20, duration: 0.2, ease: 'power2.in' });
+      gsap.to(containerRef.current, {
+        autoAlpha: 0,
+        duration: 0.25,
         ease: 'power2.in',
-        onComplete: onClose 
+        onComplete: onClose
       });
-      window.speechSynthesis.cancel();
+      window.speechSynthesis?.cancel();
     }
   };
 
   if (!isOpen && !containerRef.current) return null;
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${!isOpen ? 'pointer-events-none opacity-0' : ''}`}
-      style={{ background: 'rgba(0,0,0,0.6)' }}
+      className={`fixed inset-0 z-[80] flex items-center justify-center p-4 ${!isOpen ? 'pointer-events-none opacity-0' : ''}`}
+      style={{ background: 'rgba(13, 27, 62, 0.75)' }}
     >
-      <div 
+      <div
         ref={cardRef}
-        className="glass-panel w-full max-w-lg rounded-3xl p-8 md:p-12 flex flex-col items-center text-center relative overflow-hidden"
+        className="neo-card bg-card w-full max-w-md relative overflow-hidden"
       >
-        <div className="absolute -top-20 -left-20 w-40 h-40 bg-primary/30 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-secondary/30 rounded-full blur-3xl"></div>
+        {/* Header bar */}
+        <div className="flex items-center justify-between px-6 py-4 border-b-3 border-foreground bg-primary">
+          <div className="flex items-center gap-2">
+            <Trophy size={18} className="text-white" />
+            <span className="text-xs font-black uppercase tracking-widest text-white">Hasil Pemilihan</span>
+          </div>
+          <button
+            onClick={handleClose}
+            className="w-8 h-8 flex items-center justify-center border-2 border-white text-white hover:bg-white hover:text-primary transition-colors duration-100"
+          >
+            <X size={16} />
+          </button>
+        </div>
 
-        <div className="z-10 flex flex-col gap-6 w-full">
-          <div className="space-y-2">
-            <p className="text-foreground/60 text-lg uppercase tracking-widest font-semibold">Selamat kepada</p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-foreground text-gradient pb-2">{name}</h2>
+        {/* Content */}
+        <div className="p-8 flex flex-col gap-6">
+          {/* Name block */}
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-black uppercase tracking-widest text-foreground/40">
+              Selamat kepada
+            </p>
+            <div className="border-3 border-foreground bg-surface px-5 py-4">
+              <h2 className="text-2xl md:text-3xl font-black text-foreground leading-tight uppercase">
+                {name}
+              </h2>
+            </div>
           </div>
 
-          <div className="opacity-80">
-            <p className="text-foreground/80">atas penunjukannya sebagai</p>
-            <p className="text-foreground font-semibold text-xl mt-1">Penanggung Jawab (PJ)</p>
+          {/* Role */}
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-black uppercase tracking-widest text-foreground/40">
+              Ditunjuk sebagai
+            </p>
+            <div className="bg-foreground text-background px-5 py-3">
+              <p className="text-base font-black uppercase tracking-wide text-center">
+                Penanggung Jawab (PJ) Mata Kuliah
+              </p>
+            </div>
           </div>
 
-          <div className="bg-foreground/5 border border-foreground/10 rounded-2xl p-6 mt-2 relative overflow-hidden">
-             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 z-0"></div>
-             <div className="relative z-10">
-                <p className="text-foreground/60 text-sm mb-2">Mata Kuliah</p>
-                <h3 className="text-2xl md:text-3xl font-bold text-foreground drop-shadow-sm">{course}</h3>
-             </div>
+          {/* Course */}
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-black uppercase tracking-widest text-foreground/40">
+              Mata Kuliah
+            </p>
+            <div className="border-3 border-primary bg-card px-5 py-4">
+              <h3 className="text-xl md:text-2xl font-black text-primary uppercase">{course}</h3>
+            </div>
           </div>
 
-          <div className="mt-8 flex justify-center">
-            <MagneticButton 
-              onClick={handleClose}
-              className="px-10 py-4 bg-foreground text-background font-bold rounded-full hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(59,130,246,0.3)]"
-            >
-              Tutup & Lanjutkan
-            </MagneticButton>
-          </div>
+          {/* Action */}
+          <button
+            onClick={handleClose}
+            className="neo-btn-primary w-full py-4 text-sm font-black uppercase tracking-widest"
+          >
+            Tutup & Lanjutkan
+          </button>
         </div>
       </div>
     </div>
