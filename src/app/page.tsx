@@ -1,131 +1,62 @@
 'use client';
 
-import { useSpinWheel } from "@/hooks/useSpinWheel";
-import SpinWheel from "@/components/SpinWheel";
-import InputForm from "@/components/InputForm";
-import ResultModal from "@/components/ResultModal";
-import SmoothScroll from "@/components/SmoothScroll";
-import Hero from "@/components/Hero";
-import Countdown from "@/components/Countdown";
-import FAQ from "@/components/FAQ";
-import GsapScrollReveal from "@/components/GsapScrollReveal";
-import { useState } from "react";
+import React, { useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { HeroScrollSection } from '@/components/Hero';
+import FAQ from '@/components/FAQ';
+import StudentSelector from '@/components/StudentSelector';
+
+// ── Lightweight scroll-reveal wrapper ─────────────────────────────────────────
+function ScrollReveal({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.9', 'start 0.4'] });
+  const y       = useTransform(scrollYProgress, [0, 1], [50, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  return (
+    <motion.div ref={ref} style={{ y, opacity }} className={className}>
+      {children}
+    </motion.div>
+  );
+}
 
 export default function Home() {
-  const { 
-    data, setData, 
-    namesText, coursesText, updateText,
-    startSpin, endSpin, 
-    isSpinning, result, reset, removeResult,
-    soundEnabled, setSoundEnabled
-  } = useSpinWheel();
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
-  const [targets, setTargets] = useState<{name: number, course: number} | null>(null);
-  const [wheelsFinished, setWheelsFinished] = useState<{name: boolean, course: boolean}>({name: false, course: false});
-  const [showModal, setShowModal] = useState(false);
-
-  const handleSpinClick = () => {
-    const res = startSpin();
-    if (res) {
-      setTargets({ name: res.nameTargetIndex, course: res.courseTargetIndex });
-      setWheelsFinished({ name: false, course: false });
-      setShowModal(false);
-    }
-  };
-
-  const checkBothFinished = (type: 'name' | 'course') => {
-    setWheelsFinished(prev => {
-      const next = { ...prev, [type]: true };
-      if (next.name && next.course && targets) {
-        endSpin(targets.name, targets.course);
-        setShowModal(true);
-      }
-      return next;
-    });
-  };
-
-  const handleReset = () => {
-    reset();
-    setTargets(null);
-    setWheelsFinished({name: false, course: false});
-    setShowModal(false);
-  };
+  const scrollTo = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <SmoothScroll>
-      <main className="min-h-screen relative overflow-hidden bg-background w-full">
-        <GsapScrollReveal>
-          <Hero />
-        </GsapScrollReveal>
-        
-        <GsapScrollReveal delay={0.1}>
-          <Countdown />
-        </GsapScrollReveal>
+    <main className="min-h-screen bg-background w-full">
 
-        <GsapScrollReveal delay={0.1}>
-          <section id="spin-wheel" className="container mx-auto px-6 md:px-12 lg:px-20 xl:px-24 py-24 flex flex-col items-center z-10 relative">
-          <header className="text-center mb-16 max-w-3xl">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight mb-4">
-              Spin & <span className="text-gradient">Generate</span>
+      {/* ── Hero + Countdown scroll pair ── */}
+      <HeroScrollSection
+        onScrollToPemilihan={() => scrollTo('pemilihan')}
+        onScrollToCountdown={() => scrollTo('countdown')}
+      />
+
+      {/* ── Pemilihan section ── */}
+      <section id="pemilihan" className="neo-section py-20">
+        <div className="container mx-auto px-4 md:px-8 lg:px-16">
+          <ScrollReveal className="mb-12 flex flex-col items-center text-center">
+            <div className="inline-block bg-foreground text-background text-xs font-black px-3 py-1.5 uppercase tracking-widest mb-4">
+              Pemilihan
+            </div>
+            <h2 className="text-3xl md:text-5xl font-black text-foreground uppercase tracking-tight mb-3">
+              Pilih Penanggung Jawab
             </h2>
-            <p className="text-foreground/60 text-lg">
-              Masukkan daftar nama mahasiswa dan mata kuliah di bawah, lalu putar roda untuk menentukan Penanggung Jawab.
+            <p className="text-foreground/60 font-medium max-w-lg mx-auto">
+              Masukkan nama mata kuliah, lalu klik tombol pilih. Sistem akan memindai daftar dan berhenti secara acak.
             </p>
-          </header>
+          </ScrollReveal>
 
-          <div className="flex flex-col xl:flex-row gap-12 w-full max-w-7xl justify-center items-center xl:items-start">
-            <div className="w-full xl:w-1/3 order-2 xl:order-1">
-              <InputForm 
-                data={data}
-                namesText={namesText}
-                coursesText={coursesText}
-                updateText={updateText}
-                isSpinning={isSpinning}
-                onSpin={handleSpinClick}
-                onReset={handleReset}
-              />
-            </div>
+          <StudentSelector
+            soundEnabled={soundEnabled}
+            onToggleSound={() => setSoundEnabled(p => !p)}
+          />
+        </div>
+      </section>
 
-            <div className="w-full xl:w-2/3 order-1 xl:order-2 flex flex-col md:flex-row gap-8 justify-center items-center">
-              <SpinWheel 
-                title="Mahasiswa"
-                items={data.names}
-                spinning={isSpinning}
-                targetIndex={targets?.name ?? -1}
-                onSpinEnd={() => checkBothFinished('name')}
-                isSoundEnabled={soundEnabled}
-                toggleSound={() => setSoundEnabled(!soundEnabled)}
-              />
-              
-              <SpinWheel 
-                title="Mata Kuliah"
-                items={data.courses}
-                spinning={isSpinning}
-                targetIndex={targets?.course ?? -1}
-                onSpinEnd={() => checkBothFinished('course')}
-                isSoundEnabled={soundEnabled}
-                toggleSound={() => setSoundEnabled(!soundEnabled)}
-              />
-            </div>
-          </div>
-        </section>
-        </GsapScrollReveal>
-
-        <GsapScrollReveal delay={0.1}>
-          <FAQ />
-        </GsapScrollReveal>
-
-        <ResultModal 
-          isOpen={showModal}
-          name={result?.name || ''}
-          course={result?.course || ''}
-          onClose={() => {
-             setShowModal(false);
-             removeResult();
-          }}
-          isSoundEnabled={soundEnabled}
-        />
-      </main>
-    </SmoothScroll>
+      <FAQ />
+    </main>
   );
 }
