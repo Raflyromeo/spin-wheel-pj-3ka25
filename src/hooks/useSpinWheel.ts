@@ -1,9 +1,13 @@
 import { useState, useCallback, useRef } from 'react';
-import { determineSpinResult } from '@/lib/spinLogic';
 
 export type SpinData = {
   names: string[];
   courses: string[];
+}
+
+// Looping spin logic: absen 1-35, terus looping secara random
+function getRandomIndex(length: number): number {
+  return Math.floor(Math.random() * length);
 }
 
 export function useSpinWheel() {
@@ -14,10 +18,8 @@ export function useSpinWheel() {
   
   const [namesText, setNamesText] = useState("");
   const [coursesText, setCoursesText] = useState("");
-
   const [isSpinning, setIsSpinning] = useState(false);
   const [result, setResult] = useState<{name: string, course: string} | null>(null);
-  
   const [soundEnabled, setSoundEnabled] = useState(true);
 
   const dataRef = useRef(data);
@@ -30,9 +32,11 @@ export function useSpinWheel() {
     }
     
     setIsSpinning(true);
-    setResult(null); 
+    setResult(null);
     
-    const { nameTargetIndex, courseTargetIndex } = determineSpinResult(currentData.names, currentData.courses);
+    // Random selection - loops through all items (not removing)
+    const nameTargetIndex = getRandomIndex(currentData.names.length);
+    const courseTargetIndex = getRandomIndex(currentData.courses.length);
     
     return { nameTargetIndex, courseTargetIndex };
   }, [isSpinning]);
@@ -50,28 +54,18 @@ export function useSpinWheel() {
     setIsSpinning(false);
   }, []);
 
+  // removeResult: opsional, tidak menghapus dari list (looping)
   const removeResult = useCallback(() => {
-    if (result) {
-      setData(prev => {
-        const newNames = prev.names.filter(n => n !== result.name);
-        const newCourses = prev.courses.filter(c => c !== result.course);
-        
-        setNamesText(newNames.join('\n'));
-        setCoursesText(newCourses.join('\n'));
-
-        return { names: newNames, courses: newCourses };
-      });
-      setResult(null);
-    }
-  }, [result]);
+    setResult(null);
+  }, []);
 
   const updateText = useCallback((type: 'names' | 'courses', text: string) => {
     if (type === 'names') {
-       setNamesText(text);
-       setData(prev => ({ ...prev, names: text.split('\n').map(n => n.trim()).filter(Boolean) }));
+      setNamesText(text);
+      setData(prev => ({ ...prev, names: text.split('\n').map(n => n.trim()).filter(Boolean) }));
     } else {
-       setCoursesText(text);
-       setData(prev => ({ ...prev, courses: text.split('\n').map(c => c.trim()).filter(Boolean) }));
+      setCoursesText(text);
+      setData(prev => ({ ...prev, courses: text.split('\n').map(c => c.trim()).filter(Boolean) }));
     }
   }, []);
 
