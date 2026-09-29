@@ -122,7 +122,8 @@ export default function StudentSelector({ soundEnabled, onToggleSound }: Student
 
     // Pick random target
     // We filter out students who are interns or explicitly excluded to get valid indices
-    const validIndices = STUDENTS.map((s, i) => (s.isIntern || s.name === 'MUHAMMAD RAFLY ROMEO NASUTION') ? -1 : i).filter(i => i !== -1);
+    const excludedNames = ['MUHAMMAD RAFLY ROMEO NASUTION', 'CYNTHIA BELLA', 'ROBBY ARDIANSYAH HUDAYA'];
+    const validIndices = STUDENTS.map((s, i) => (s.isIntern || excludedNames.includes(s.name)) ? -1 : i).filter(i => i !== -1);
     
     let target = validIndices[Math.floor(Math.random() * validIndices.length)] ?? 0;
 
